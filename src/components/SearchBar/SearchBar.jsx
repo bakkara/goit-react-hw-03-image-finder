@@ -1,7 +1,7 @@
 export const SearchBar = ({onSubmit}) => {
     return (
         <header>
-            <form onSubmit={()=> onSubmit()}>
+            <form onSubmit={(evt)=> onSubmit(evt)}>
                 <button type="submit">
                     <span>Search</span>
                 </button>
