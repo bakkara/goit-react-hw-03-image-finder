@@ -19,12 +19,16 @@ export class App extends Component {
     totalHits: 0,
     loadMore: false,
     isModalOpen: false,
+    largeImageURL: '',
+    tag: '',
   }
 
    onSearch = (evt) => {
-    evt.preventDefault();
+     evt.preventDefault();
+     const value = evt.target.query.value.trim('');
+     if (value === '') return toast.error(`Enter your request`);  
     this.setState({
-      query: `${Date.now()}/${evt.target.query.value}`,
+      query: `${Date.now()}/${value}`,
       images: [],
       page: 1,
     })
@@ -47,10 +51,16 @@ export class App extends Component {
            this.state.query.slice(14),
            this.state.page
          );
-      
+         if (hits.length === 0) {
+           return toast.error(`We didn't find anything. Try again`);
+         } else {
+           if (this.state.page === 1) {
+             toast.success(`We find ${totalHits} pictures`);
+           }
+         }
          this.setState((prevState) => ({
            images: [...prevState.images, ...hits],
-          loadMore: this.state.page < Math.ceil(totalHits / 12)
+            loadMore: this.state.page < Math.ceil(totalHits / 12)
          }));
        } catch (error) {
          this.setState({ error: true });
@@ -62,22 +72,25 @@ export class App extends Component {
   }
   } 
   
-  openModal = () => {
-  console.log('hi')
+  openModal = (largeImageURL, tag) => {
   this.setState({
-      isModalOpen: true,
+    isModalOpen: true,
+    largeImageURL,
+    tag
     });
   };
 
   closeModal = () => {
     this.setState({
       isModalOpen: false,
+      largeImageURL: '',
+      tag: '',
     });
   };
 
 
   render() {
-    const { images, loading, error, loadMore, isModalOpen } = this.state;
+    const { images, loading, error, loadMore, isModalOpen, largeImageURL, tag} = this.state;
 
     return (
       <Layout>
@@ -89,7 +102,8 @@ export class App extends Component {
         {isModalOpen && <ModalComponent
           isOpen={isModalOpen}
           onRequestClose={this.closeModal}
-          gallery={images}
+          largeImageURL={largeImageURL}
+          tag={tag}
         />}
         <Toaster position="top-right"/>
       </Layout>

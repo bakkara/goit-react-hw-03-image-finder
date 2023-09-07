@@ -5,8 +5,8 @@ import { ImageGalleryLi, ImageGalleryList } from "./ImageGallery.styled"
         return (
             <ImageGalleryList>
                 {gallery.map(item => (
-                    <ImageGalleryLi key={item.id} >
-                    <ImageGalleryItem url={item.webformatURL} tag={item.tags} onClick={onImageClick}/>
+                    <ImageGalleryLi key={item.id} onClick={() => onImageClick(item.largeImageURL, item.tags)}>
+                    <ImageGalleryItem url={item.webformatURL} tag={item.tags} />
                 </ImageGalleryLi>
         ))}
         </ImageGalleryList>
