@@ -2,6 +2,7 @@ import { fetchImages } from "api";
 import { Component } from "react";
 import { Button } from "./Button/Button";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
+import { Layout } from "./Layout";
 import { SearchBar } from "./SearchBar/SearchBar";
 
 export class App extends Component {
@@ -16,7 +17,6 @@ export class App extends Component {
 
    onSearch = (evt) => {
     evt.preventDefault();
-    console.log(evt.target.query.value)
     this.setState({
       query: evt.target.query.value,
       images: [],
@@ -47,7 +47,6 @@ export class App extends Component {
   
 
   handlerLoadMore = () => {
-    console.log('hi')
     this.setState(prevState => ({
       page: prevState.page + 1,
     }))
@@ -56,11 +55,11 @@ export class App extends Component {
   render() {
  /* const lastPage = Math.ceil(this.state.totalHits / this.state.images.length); */
     return (
-    <div>
+      <Layout>
         <SearchBar onSubmit={this.onSearch} />
         {this.state.images.length > 0 && <ImageGallery gallery={this.state.images} />}
         {this.state.images.length > 0 && <Button onLoadMore={this.handlerLoadMore} />}
-      </div >
+      </Layout>
     )
   }
 

@@ -1,7 +1,9 @@
-export const SearchBar = ({onSubmit}) => {
+import { SearchBarHeader, SearchForm } from "./Searchbar.styled"
+
+export const SearchBar = ({ onSubmit }) => {
     return (
-        <header>
-            <form onSubmit={(evt)=> onSubmit(evt)}>
+        <SearchBarHeader>
+            <SearchForm onSubmit={(evt)=> onSubmit(evt)}>
                 <button type="submit">
                     <span>Search</span>
                 </button>
@@ -12,7 +14,7 @@ export const SearchBar = ({onSubmit}) => {
                 autofocus */
                 placeholder="Search images and photos"
                 />
-            </form>
-        </header>
+            </SearchForm>
+       </SearchBarHeader>
     )
 } 
