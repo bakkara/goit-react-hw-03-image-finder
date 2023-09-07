@@ -25,6 +25,7 @@ export const ModalComponent = ({ isOpen, onRequestClose, largeImageURL, tag }) =
             border: 'none', 
             maxWidth: 'calc(100vw - 48px)',
             maxHeight: 'calc(100vh - 24px)',
+            overflow: 'hidden',
         },
     };
   return (
