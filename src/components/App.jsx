@@ -3,7 +3,11 @@ import { Component } from "react";
 import { Button } from "./Button/Button";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
 import { Layout } from "./Layout";
+import { Loader } from "./Loader/Loader";
 import { SearchBar } from "./SearchBar/SearchBar";
+import { toast, Toaster } from 'react-hot-toast';
+import { ModalComponent } from "./Modal/Modal";
+
 
 export class App extends Component {
   state = {
@@ -13,38 +17,18 @@ export class App extends Component {
     loading: false,
     error: false,
     totalHits: 0,
+    loadMore: false,
+    isModalOpen: false,
   }
 
    onSearch = (evt) => {
     evt.preventDefault();
     this.setState({
-      query: evt.target.query.value,
+      query: `${Date.now()}/${evt.target.query.value}`,
       images: [],
       page: 1,
     })
   } 
-
-  async componentDidUpdate(prevProps, prevState){ 
-     if (
-      this.state.query !== prevState.query ||
-      this.state.page !== prevState.page
-    ) { 
-     try {
-      const { hits, totalHits } = await fetchImages(
-        this.state.query,
-        this.state.page
-      );
-      this.setState((prevState) => ({
-        images: [...prevState.images, ...hits],
-        totalHits: totalHits,
-        loading: true,
-      }));
-    } catch (error) {
-      this.setState({ error: true });
-    }
-  }
-    } 
-  
 
   handlerLoadMore = () => {
     this.setState(prevState => ({
@@ -52,16 +36,63 @@ export class App extends Component {
     }))
   }
 
+  async componentDidUpdate(prevProps, prevState){ 
+     if (
+      this.state.query !== prevState.query ||
+      this.state.page !== prevState.page
+    ) { 
+       try {
+        this.setState({ loading: true, error: false });
+         const { hits, totalHits } = await fetchImages(
+           this.state.query.slice(14),
+           this.state.page
+         );
+      
+         this.setState((prevState) => ({
+           images: [...prevState.images, ...hits],
+          loadMore: this.state.page < Math.ceil(totalHits / 12)
+         }));
+       } catch (error) {
+         this.setState({ error: true });
+         toast.error(`OOPS! THERE WAS AN ERROR!`)
+       }
+       finally {
+         this.setState({ loading: false });
+       }
+  }
+  } 
+  
+  openModal = () => {
+  console.log('hi')
+  this.setState({
+      isModalOpen: true,
+    });
+  };
+
+  closeModal = () => {
+    this.setState({
+      isModalOpen: false,
+    });
+  };
+
+
   render() {
- /* const lastPage = Math.ceil(this.state.totalHits / this.state.images.length); */
+    const { images, loading, error, loadMore, isModalOpen } = this.state;
+
     return (
       <Layout>
         <SearchBar onSubmit={this.onSearch} />
-        {this.state.images.length > 0 && <ImageGallery gallery={this.state.images} />}
-        {this.state.images.length > 0 && <Button onLoadMore={this.handlerLoadMore} />}
+        {loading && <Loader/>}
+        {error && !loading && <div>OOPS! THERE WAS AN ERROR!</div>}
+        {images.length > 0 && <ImageGallery gallery={images} onImageClick={this.openModal} />}
+        {loadMore && <Button onLoadMore={this.handlerLoadMore} />}
+        {isModalOpen && <ModalComponent
+          isOpen={isModalOpen}
+          onRequestClose={this.closeModal}
+          gallery={images}
+        />}
+        <Toaster position="top-right"/>
       </Layout>
     )
   }
-
-
 }

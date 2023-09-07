@@ -3,7 +3,7 @@ import { SearchBarHeader, SearchForm } from "./Searchbar.styled"
 export const SearchBar = ({ onSubmit }) => {
     return (
         <SearchBarHeader>
-            <SearchForm onSubmit={(evt)=> onSubmit(evt)}>
+            <SearchForm onSubmit={onSubmit}>
                 <button type="submit">
                     <span>Search</span>
                 </button>
