@@ -26,8 +26,10 @@ export class App extends Component {
    onSearch = (evt) => {
      evt.preventDefault();
      const value = evt.target.query.value.toLowerCase().trim('');
-     if (value === '') return toast.error(`Enter your request`);  
-    this.setState({
+     if (value === '') {
+       return toast.error(`Enter your request`)
+     };  
+    this.setState({ 
       query: `${Date.now()}/${value}`,
       images: [],
       page: 1,
