@@ -11,6 +11,8 @@ export const SearchBar = ({ onSubmit }) => {
                 <SearchInput
                     type="text"
                     name="query"
+                    autoFocus
+                    autoComplete="off"
                 placeholder="Search images and photos"
                 />
             </SearchForm>
